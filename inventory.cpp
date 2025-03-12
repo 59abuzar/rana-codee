@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <algorithm>
 
 using namespace std;
 
@@ -63,6 +64,32 @@ public:
             cout << "Deletion canceled." << endl;
         }
     }
+
+    void searchItem(string searchName) {
+        bool found = false;
+        for (const auto& item : items) {
+            if (item.name == searchName) {
+                cout << "Found: ID " << item.id << " - " << item.name << " - Quantity: " << item.quantity << " - Price: " << item.price << endl;
+                found = true;
+            }
+        }
+        if (!found) cout << "Item not found!" << endl;
+    }
+
+    void sortByPrice() {
+        sort(items.begin(), items.end(), [](const Item& a, const Item& b) {
+            return a.price < b.price;
+        });
+        cout << "Items sorted by price!" << endl;
+    }
+
+    void calculateTotalValue() {
+        double totalValue = 0;
+        for (const auto& item : items) {
+            totalValue += item.quantity * item.price;
+        }
+        cout << "Total Inventory Value: $" << totalValue << endl;
+    }
 };
 
 int main() {
@@ -75,7 +102,10 @@ int main() {
         cout << "2. Display Items" << endl;
         cout << "3. Update Quantity" << endl;
         cout << "4. Delete Item" << endl;
-        cout << "5. Exit" << endl;
+        cout << "5. Search Item" << endl;
+        cout << "6. Sort Items by Price" << endl;
+        cout << "7. Calculate Total Inventory Value" << endl;
+        cout << "8. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -121,13 +151,27 @@ int main() {
                 inventory.deleteItem(id);
                 break;
             }
-            case 5:
+            case 5: {
+                string searchName;
+                cin.ignore();
+                cout << "Enter item name to search: ";
+                getline(cin, searchName);
+                inventory.searchItem(searchName);
+                break;
+            }
+            case 6:
+                inventory.sortByPrice();
+                break;
+            case 7:
+                inventory.calculateTotalValue();
+                break;
+            case 8:
                 cout << "Exiting program..." << endl;
                 break;
             default:
                 cout << "Invalid choice! Please try again." << endl;
         }
-    } while (choice != 5);
+    } while (choice != 8);
     
     return 0;
 }
